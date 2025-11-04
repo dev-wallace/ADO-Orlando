@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nós - Cafeteria</title>
+    <style>
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Noto Sans', sans-serif;
+        }
+
+        body {
+            background-color: #f8f5f0;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Container principal */
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Cabeçalho */
+        .about-header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .about-header h1 {
+            font-size: 2.5rem;
+            color: #3e2723;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .about-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #8d6e63;
+        }
+
+        .about-header p {
+            font-size: 1.1rem;
+            color: #5d4037;
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        /* Seções */
+        .about-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 60px 0;
+            gap: 40px;
+        }
+
+        .about-section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .about-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-content h2 {
+            font-size: 1.8rem;
+            color: #5d4037;
+            margin-bottom: 20px;
+        }
+
+        .about-content p {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        /* Equipe */
+        .team-section {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .team-section h2 {
+            font-size: 2rem;
+            color: #3e2723;
+            margin-bottom: 40px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+
+        .team-member-img {
+            width: 100%;
+            height: 250px;
+            background-color: #8d6e63;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+
+        .team-member-info {
+            padding: 20px;
+        }
+
+        .team-member-info h3 {
+            color: #5d4037;
+            margin-bottom: 5px;
+        }
+
+        .team-member-info p {
+            color: #795548;
+            font-style: italic;
+        }
+
+        /* Valores */
+        .values-section {
+            background-color: #5d4037;
+            color: white;
+            padding: 80px 0;
+            margin: 60px 0;
+        }
+
+        .values-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .values-container h2 {
+            font-size: 2rem;
+            margin-bottom: 50px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .value-item {
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .value-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .value-item i {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffcc80;
+        }
+
+        .value-item h3 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+
+            .about-section,
+            .about-section:nth-child(even) {
+                flex-direction: column;
+            }
+
+            .about-header h1 {
+                font-size: 2rem;
+            }
+
+            .team-grid,
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Botão de voltar */
+        .back-button {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 25px;
+            background-color: #8d6e63;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #6d4c41;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+
+<body>
+    <div th:replace="~{fragments/header}"></div>
+
+    <div class="about-container">
+        <div class="about-header">
+            <h1>Sobre Nós</h1>
+            <p>Desde 2010, temos servimos os melhores cafés com paixão e dedicação. Nossa missão é transformar cada
+                xícara em uma experiência memorável.</p>
+        </div>
+
+        <div class="about-section">
+            <div class="about-image">
+                <div
+                    style="background-color: #8d6e63; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    <a th:href="@{/about}"><img th:src="@{/images_homapage/cafeteria1.jpg}"></a>
+
+                </div>
+            </div>
+            <div class="about-content">
+                <h2>Nossa História</h2>
+                <p>Tudo começou em um pequeno espaço no centro da cidade, onde nosso fundador, Carlos Silva, decidiu
+                    compartilhar sua paixão por cafés especiais. Com apenas uma máquina de café e muita determinação,
+                    ele começou a servir bebidas que rapidamente conquistaram o paladar da comunidade.</p>
+                <p>Hoje, após mais de uma década, mantemos o mesmo compromisso com a qualidade e o atendimento
+                    personalizado que nos tornou referência na região.</p>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <div class="about-image">
+                <div
+                    style="background-color: #6d4c41; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    <a th:href="@{/about}"><img th:src="@{/images_homapage/grao.jpg}"></a>
+                </div>
+            </div>
+            <div class="about-content">
+                <h2>Nossa Filosofia</h2>
+                <p>Acreditamos que um bom café vai além da bebida - é sobre criar momentos especiais, conexões genuínas
+                    e experiências que aquecem a alma.</p>
+                <p>Por isso, selecionamos cuidadosamente os melhores grãos de produtores sustentáveis, torramos
+                    artesanalmente e preparamos cada xícara com atenção aos detalhes.</p>
+            </div>
+        </div>
+
+        <div class="values-section">
+            <div class="values-container">
+                <h2>Nossos Valores</h2>
+                <div class="values-grid">
+                    <div class="value-item">
+                        <i class="fas fa-seedling"></i>
+                        <h3>Sustentabilidade</h3>
+                        <p>Trabalhamos com produtores que praticam agricultura sustentável e respeitam o meio ambiente.
+                        </p>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-heart"></i>
+                        <h3>Paixão</h3>
+                        <p>Amamos o que fazemos e acreditamos que isso faz toda a diferença no sabor do nosso café.</p>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-users"></i>
+                        <h3>Comunidade</h3>
+                        <p>Valorizamos as pessoas que fazem parte da nossa história - clientes, colaboradores e
+                            fornecedores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2>Nossa Equipe</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-member-img">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Carlos Silva</h3>
+                        <p>Fundador & Barista-chefe</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Ana Costa</h3>
+                        <p>Gerente de Operações</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Miguel Santos</h3>
+                        <p>Barista Sênior</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Juliana Lima</h3>
+                        <p>Confeiteira</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 40px 0;">
+
+            <a th:href="@{/}" class="back-button">Voltar para o Início</a>
+
+        </div>
+    </div>
+</body>
+
+</html>

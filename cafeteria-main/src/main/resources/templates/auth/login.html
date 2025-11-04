@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cafeteria</title>
+
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+
+
+<body>
+    <div class="wrapper">
+        <div class="nav__logo">
+            <a th:href="@{/}"><img th:src="@{/images_homapage/starbucks-logo.png}" alt="starbucks-logo"></a>
+        </div>
+        <header class="nav">
+            <nav>
+                <ul class="nav__links">
+                    <li class="nav__link"><a href="#">Home</a></li>
+                    <li></li><a class="nav-link-custom" th:href="@{/menu}">Menu</li>
+                        <li class="nav__link"><a th:href="@{/about}">About Us</a></li>
+                </ul>
+                <div class="navbar__auth">
+                    <button id="signInBtn" class="sign-in">Sign In</button>
+                    <a id="joinNowBtn" href="#">Join Now</a>
+                    <a href="#" id="findStoreBtn">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Find A Store</span>
+                    </a>
+                </div>
+            </nav>
+        </header>
+        <div class="mockup__content">
+            <div class="mockup__texts">
+                <h2 class="mockup__title">Coff & Co!</h2>
+                <p class="mockup__paragrafo">Impulsione sua produtividade e eleve seu humor com um copo de Starbucks
+                    pela manhã.
+                    Deixe o aroma do nosso café inspirar sua rotina e transforme suas manhãs em momentos especiais.</p>
+                <div class="social_midias">
+                    <div class="social_midia">
+                        <a href="#"><img th:src="@{/images_homapage/facebook.png}" alt="Facebook"></a>
+                    </div>
+                    <div class="social_midia">
+                        <a href="#"><img th:src="@{/images_homapage/instagram.png}" alt="Instagram"></a>
+                    </div>
+                    <div class="social_midia">
+                        <a href="#"><img th:src="@{/images_homapage/twitter.png}" alt="Twitter"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mockup__image"><img th:src="@{/images_homapage/frappuccino.png}" alt="Frappuccino"></div>
+        </div>
+
+        <!-- Popup de Cadastro - Oculto inicialmente -->
+        <div class="cdk-overlay-pane" id="locationPopup" style="display: none;">
+            <div class="mat-dialog-container">
+                <div class="gps-alert-box">
+
+                    <img th:src="@{/images_homapage/Group45.svg}" alt="Estrela" class="icon-top-left">
+                    <img th:src="@{/images_homapage/Group45.svg}" alt="Flor" class="icon-bottom-right">
+                    <div class="form-box">
+                        <h2>Sign-up</h2>
+                    </div>
+
+                    <!-- Mensagem de feedback para cadastro -->
+                    <div id="cadastroMensagem" style="display: none; margin: 10px; padding: 10px; border-radius: 4px;">
+                    </div>
+
+                    <div class="card-remove-wrapper2">
+                        <form th:action="@{/cadastro}" method="post" id="registerForm">
+                            <div class="input-box">
+                                <span class="icon"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" id="name" name="nome" required>
+                                <label for="name">Name</label>
+                            </div>
+
+                            <div class="input-box">
+                                <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" id="email" name="email" required placeholder=" ">
+                                <label for="email">Email</label>
+                            </div>
+
+                            <div class="input-box">
+                                <span class="icon"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" id="senha" name="senha" required>
+                                <label for="senha">Password</label>
+                            </div>
+
+                            <div class="input-box">
+                                <span class="icon"><i class="fa-solid fa-map-marker-alt"></i></span>
+                                <input type="text" id="endereco" name="endereco" required>
+                                <label for="endereco">Address</label>
+                            </div>
+
+                            <button type="submit" class="btn">Register</button>
+                        </form>
+                    </div>
+                    <div class="close">
+                        <button type="button" class="close-btn" id="closePopupBtn">Skip</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Popup de Login - Oculto inicialmente -->
+        <div class="cdk-overlay-pane2" id="locationPopup2" style="display: none;">
+            <div class="mat-dialog-container2">
+                <div class="gps-alert-box2">
+
+                    <img th:src="@{/images_homapage/Group45.svg}" alt="Estrela" class="icon-top-left2">
+                    <img th:src="@{/images_homapage/Group45.svg}" alt="Flor" class="icon-bottom-right2">
+                    <div class="form-box">
+                        <h2>Login</h2>
+                    </div>
+
+                    <!-- Mensagem de erro do Thymeleaf -->
+                    <div th:if="${param.error}" class="alert alert-danger"
+                        style="margin: 10px; padding: 10px; background: #f8d7da; color: #721c24; border-radius: 4px;">
+                        Email ou senha inválidos!
+                    </div>
+
+                    <!-- Mensagem de sucesso do cadastro -->
+                    <div th:if="${sucessoCadastro}" class="alert alert-success"
+                        style="margin: 10px; padding: 10px; background: #d4edda; color: #155724; border-radius: 4px;">
+                        <span th:text="${sucessoCadastro}"></span>
+                    </div>
+
+                    <div class="close2">
+                        <button type="button" class="close-btn2" id="closePopupBtn2">Skip</button>
+                    </div>
+
+                    <div class="card-remove-wrapper3">
+                        <form th:action="@{/login}" method="post">
+                            <div class="input-box2">
+                                <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" id="username" name="username" required placeholder=" ">
+                                <label for="username">Email</label>
+                            </div>
+
+                            <div class="input-box2">
+                                <span class="icon"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" id="password" name="password" required>
+                                <label for="password">Password</label>
+                            </div>
+
+                            <button type="submit" class="btn2">Login</button>
+
+                            <div class="remember">
+                                <label><input type="checkbox" name="remember-me"> Remember me</label>
+                                <a href="#">Forgot Password?</a>
+                            </div>
+
+                            <div class="login-registeter">
+                                <p>Don't have an account?<a id="registerLink" href="#"
+                                        class="register-link">Register</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalOverlay" style="display: none;"></div>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+
+    <script>
+        // Script para controlar a exibição dos popups e validação
+        document.addEventListener('DOMContentLoaded', function () {
+            const signInBtn = document.getElementById('signInBtn');
+            const joinNowBtn = document.getElementById('joinNowBtn');
+            const loginPopup = document.getElementById('locationPopup2');
+            const registerPopup = document.getElementById('locationPopup');
+            const closePopupBtn = document.getElementById('closePopupBtn');
+            const closePopupBtn2 = document.getElementById('closePopupBtn2');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const registerLink = document.getElementById('registerLink');
+            const registerForm = document.getElementById('registerForm');
+            const cadastroMensagem = document.getElementById('cadastroMensagem');
+
+            // Abrir popup de CADASTRO ao clicar no botão "Sign In"
+            if (signInBtn && registerPopup) {
+                signInBtn.addEventListener('click', function () {
+                    registerPopup.style.display = 'block';
+                    modalOverlay.style.display = 'block';
+                    // Limpar mensagens anteriores
+                    cadastroMensagem.style.display = 'none';
+                });
+            }
+
+            // Função para fechar todos os popups
+            function closeAllPopups() {
+                if (loginPopup) loginPopup.style.display = 'none';
+                if (registerPopup) registerPopup.style.display = 'none';
+                if (modalOverlay) modalOverlay.style.display = 'none';
+            }
+
+            // Abrir popup de LOGIN ao clicar no botão "Join Now"
+            if (joinNowBtn && loginPopup) {
+                joinNowBtn.addEventListener('click', function () {
+                    loginPopup.style.display = 'block';
+                    modalOverlay.style.display = 'block';
+                });
+            }
+
+            // Alternar entre popups (do login para cadastro)
+            if (registerLink && registerPopup && loginPopup) {
+                registerLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    loginPopup.style.display = 'none';
+                    registerPopup.style.display = 'block';
+                    // Limpar mensagens anteriores
+                    cadastroMensagem.style.display = 'none';
+                });
+            }
+
+            // Fechar popup de cadastro
+            if (closePopupBtn && registerPopup) {
+                closePopupBtn.addEventListener('click', function () {
+                    registerPopup.style.display = 'none';
+                    modalOverlay.style.display = 'none';
+                });
+            }
+
+            // Fechar popup de login
+            if (closePopupBtn2 && loginPopup) {
+                closePopupBtn2.addEventListener('click', function () {
+                    loginPopup.style.display = 'none';
+                    modalOverlay.style.display = 'none';
+                });
+            }
+
+            // Fechar ao clicar fora do popup
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function () {
+                    if (loginPopup && loginPopup.style.display === 'block') {
+                        loginPopup.style.display = 'none';
+                    }
+                    if (registerPopup && registerPopup.style.display === 'block') {
+                        registerPopup.style.display = 'none';
+                    }
+                    modalOverlay.style.display = 'none';
+                });
+            }
+
+            // Fechar popups com a tecla ESC
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeAllPopups();
+                }
+            });
+
+            // Validação simples do formulário de cadastro
+            if (registerForm) {
+                registerForm.addEventListener('submit', function (e) {
+                    const nome = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const senha = document.getElementById('senha').value;
+                    const endereco = document.getElementById('endereco').value;
+
+                    // Validação básica
+                    if (!nome || !email || !senha || !endereco) {
+                        e.preventDefault();
+                        mostrarMensagem('Por favor, preencha todos os campos.', 'erro');
+                        return false;
+                    }
+
+                    // Validação de email simples
+                    if (!validarEmail(email)) {
+                        e.preventDefault();
+                        mostrarMensagem('Por favor, insira um email válido.', 'erro');
+                        return false;
+                    }
+
+                    // Se tudo estiver correto, o formulário será enviado
+                    mostrarMensagem('Cadastro realizado com sucesso!', 'sucesso');
+                });
+            }
+
+            // Função para validar email
+            function validarEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // Função para mostrar mensagens de feedback
+            function mostrarMensagem(mensagem, tipo) {
+                cadastroMensagem.textContent = mensagem;
+                cadastroMensagem.style.display = 'block';
+
+                if (tipo === 'erro') {
+                    cadastroMensagem.style.backgroundColor = '#f8d7da';
+                    cadastroMensagem.style.color = '#721c24';
+                    cadastroMensagem.style.border = '1px solid #f5c6cb';
+                } else {
+                    cadastroMensagem.style.backgroundColor = '#d4edda';
+                    cadastroMensagem.style.color = '#155724';
+                    cadastroMensagem.style.border = '1px solid #c3e6cb';
+                }
+
+                // Rolagem suave para a mensagem
+                cadastroMensagem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+</body>
+
+</html>

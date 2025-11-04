@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Produtos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      :root{
+        --green-main: #00704A;
+        --green-dark: #00583f;
+        --bg: #f7f8f6;
+        --card: #ffffff;
+        --muted: #6b6b6b;
+        --radius: 12px;
+      }
+
+      body {
+        background: linear-gradient(180deg, var(--bg), #ffffff 200px);
+        color: #2f2f2f;
+        font-family: Inter, "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+      }
+
+      .products-wrap {
+        max-width: 1100px;
+        margin: 36px auto;
+        padding: 0 16px;
+      }
+
+      .products-header {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .products-header h1 {
+        font-size: 1.25rem;
+        margin: 0;
+        display:flex;
+        align-items:center;
+        gap:8px;
+      }
+      .btn-new {
+        background: linear-gradient(180deg, var(--green-main), var(--green-dark));
+        border: none;
+        color: #fff;
+        border-radius: 10px;
+        padding: 8px 12px;
+        box-shadow: 0 6px 18px rgba(0,112,74,0.12);
+      }
+      .btn-new:hover { transform: translateY(-2px); }
+
+      /* Card container / painel */
+      .panel {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 14px;
+        box-shadow: 0 8px 28px rgba(2,40,20,0.04);
+        border: 1px solid rgba(0,0,0,0.04);
+      }
+
+      /* Table styles */
+      .table-custom {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+      }
+      .table-custom thead th {
+        border-bottom: none;
+        background: transparent;
+        color: #444;
+        font-weight: 600;
+        padding: 16px 12px;
+      }
+      .table-custom tbody tr {
+        background: transparent;
+      }
+      .table-custom tbody tr td {
+        padding: 12px;
+        vertical-align: middle;
+        border-top: 1px solid rgba(0,0,0,0.04);
+      }
+      .table-custom tbody tr:hover {
+        background: rgba(0, 112, 74, 0.03);
+      }
+
+      .img-thumb {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+
+      .price {
+        color: var(--green-main);
+        font-weight: 700;
+      }
+
+      /* Action buttons */
+      .action-btn {
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        border: 1px solid transparent;
+        transition: all .14s ease;
+        text-decoration: none;
+      }
+      .btn-edit {
+        background: rgba(255, 193, 7, 0.08);
+        color: #b37f00;
+        border-color: rgba(0,0,0,0.03);
+      }
+      .btn-edit:hover { background: rgba(255,193,7,0.14); transform: translateY(-2px); }
+
+      .btn-delete {
+        background: rgba(220,53,69,0.06);
+        color: #b02a37;
+      }
+      .btn-delete:hover { background: rgba(220,53,69,0.12); transform: translateY(-2px); }
+
+      /* Mobile card list (shows on small screens) */
+      .product-cards { display: none; gap: 12px; }
+      .product-card {
+        display:flex;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,0.03);
+        box-shadow: 0 6px 18px rgba(2,40,20,0.03);
+      }
+      .product-card .meta { flex:1; }
+      .product-card h5 { margin: 0 0 4px 0; font-size: 1rem; }
+      .product-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+      /* Footer actions row inside card */
+      .card-actions { display:flex; gap:8px; margin-top:8px; }
+
+      /* Empty state */
+      .empty-state {
+        text-align:center;
+        padding: 28px;
+        color: var(--muted);
+      }
+
+      /* Responsive rules */
+      @media (max-width: 991px) {
+        /* show cards on mobile, hide table */
+        .table-responsive { display: none !important; }
+        .product-cards { display: flex; flex-direction: column; }
+      }
+      @media (min-width: 992px) {
+        .product-cards { display: none; }
+      }
+    </style>
+</head>
+<body>
+    <!-- mantemos o header como você tinha -->
+      <div th:replace="~{fragments/header}"></div>
+
+    
+    <div class="products-wrap">
+      <div class="products-header">
+        <h1>📋 Lista de Produtos</h1>
+        <a th:href="@{/admin/produtos/novo}" class="btn btn-new">➕ Novo Produto</a>
+      </div>
+
+      <div class="panel">
+        <!-- estado vazio -->
+        <div th:if="${produtos.empty}" class="empty-state">
+          <p class="mb-2">Nenhum produto cadastrado ainda.</p>
+          <a th:href="@{/admin/produtos/novo}" class="btn btn-new">➕ Cadastrar primeiro produto</a>
+        </div>
+
+        <!-- Tabela (desktop / tablet) -->
+        <div th:unless="${produtos.empty}" class="table-responsive">
+          <table class="table table-custom mb-0">
+            <thead>
+              <tr>
+                <th style="width:80px">Imagem</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th style="width:140px">Preço</th>
+                <th style="width:170px">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="produto : ${produtos}">
+                <td>
+                  <img th:if="${produto.imagemBase64 != null}" 
+                       th:src="'data:image/jpeg;base64,' + ${produto.imagemBase64}"
+                       class="img-thumb" alt="imagem">
+                  <span th:unless="${produto.imagemBase64 != null}" style="color:var(--muted);font-size:0.9rem">Sem imagem</span>
+                </td>
+                <td th:text="${produto.nome}">Nome</td>
+                <td th:text="${produto.descricao}">Descrição</td>
+                <td class="price" th:text="'R$ ' + ${#numbers.formatDecimal(produto.preco, 1, 2, 'POINT')}">R$ 0,00</td>
+                <td>
+                  <a th:href="@{/admin/produtos/editar/{id}(id=${produto.id})}" class="action-btn btn-edit btn-sm">✏️ Editar</a>
+                  <a th:href="@{/admin/produtos/excluir/{id}(id=${produto.id})}" 
+                     class="action-btn btn-delete btn-sm"
+                     onclick="return confirm('Tem certeza que deseja excluir este produto?')">🗑️ Excluir</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cards (mobile) -->
+        <div th:unless="${produtos.empty}" class="product-cards mt-2">
+          <div th:each="produto : ${produtos}" class="product-card">
+            <div>
+              <img th:if="${produto.imagemBase64 != null}" th:src="'data:image/jpeg;base64,' + ${produto.imagemBase64}"
+                   style="width:72px;height:72px;border-radius:8px;object-fit:cover;border:1px solid rgba(0,0,0,0.04)">
+              <div th:unless="${produto.imagemBase64 != null}" style="width:72px;height:72px;border-radius:8px;background:#f3f3f3;display:flex;align-items:center;justify-content:center;color:var(--muted)">No img</div>
+            </div>
+
+            <div class="meta">
+              <h5 th:text="${produto.nome}">Nome do produto</h5>
+              <p th:text="${produto.descricao}">Descrição curta...</p>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <div class="price" th:text="'R$ ' + ${#numbers.formatDecimal(produto.preco, 1, 2, 'POINT')}">R$ 0,00</div>
+                <div class="card-actions">
+                  <a th:href="@{/admin/produtos/editar/{id}(id=${produto.id})}" class="action-btn btn-edit btn-sm">✏️</a>
+                  <a th:href="@{/admin/produtos/excluir/{id}(id=${produto.id})}" class="action-btn btn-delete btn-sm"
+                     onclick="return confirm('Tem certeza que deseja excluir este produto?')">🗑️</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-3">
+        <a th:href="@{/admin/dashboard}" class="btn btn-secondary">Voltar ao Dashboard</a>
+      </div>
+    </div>
+
+    <!-- bootstrap js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

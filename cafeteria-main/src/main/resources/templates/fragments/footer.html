@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Fragment Footer - Cafeteria</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --green-1: #00704A;
+      --green-2: #013F2B;
+      --muted-2: #e9f6f2;
+    }
+
+   .footer-custom{
+  background: linear-gradient(180deg, var(--green-2), var(--green-1));
+  color: rgba(255,255,255,0.95);
+  padding: 20px 0; /* ↓ menor altura */
+  border-top-left-radius: 6px; /* ↓ borda mais clean */
+  border-top-right-radius: 6px;
+  margin-top: auto;
+}
+
+.footer-badge {
+  width:36px; height:36px; /* ↓ badge menor */
+  border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: none; /* ↓ remove sombra */
+}
+
+.social-icon {
+  width:32px; height:32px; /* ↓ menor tamanho */
+  border-radius:6px;
+  background: rgba(255,255,255,0.08);
+  display:inline-flex; align-items:center; justify-content:center;
+  margin-left:6px;
+  transition: transform .15s, background .15s;
+  color: #fff;
+  font-size: 0.9rem; /* ↓ ícone mais clean */
+}
+.social-icon:hover { transform: translateY(-2px); background: rgba(255,255,255,0.15); }
+
+.footer-links a { margin-bottom:6px; font-size:0.95rem; } /* ↓ links mais finos */
+
+.small-note {
+  opacity: .8;
+  font-size: 0.85rem;
+}
+
+    .footer-custom{
+      background: linear-gradient(180deg, var(--green-2), var(--green-1));
+      color: rgba(255,255,255,0.95);
+      padding: 38px 0;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      margin-top: auto; /* ← ISSO EMPURRA O FOOTER PARA BAIXO */
+    }
+
+    .footer-custom a { color: rgba(255,255,255,0.92); text-decoration: none; }
+    .footer-custom a:hover { color: #cff0e1; text-decoration: underline; }
+
+    .footer-brand {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      font-weight:700;
+      font-size:1.05rem;
+    }
+    .footer-badge {
+      width:44px; height:44px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,0.12); color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    }
+
+    .social-icon {
+      width:38px; height:38px; border-radius:8px;
+      background: rgba(255,255,255,0.08);
+      display:inline-flex; align-items:center; justify-content:center;
+      margin-left:6px;
+      transition: transform .15s, background .15s;
+      color: #fff;
+    }
+    .social-icon:hover { transform: translateY(-4px); background: rgba(255,255,255,0.12); }
+
+    .footer-links a { display:block; margin-bottom:8px; }
+
+    .small-note {
+      opacity: .86;
+    }
+
+    @media (max-width: 767px){
+      .footer-custom{ text-align:center; }
+      .footer-links { margin-top: 16px; }
+    }
+  </style>
+</head>
+<body>
+  
+  <footer th:fragment="footer" class="footer-custom">
+    <div class="container">
+      <div class="row gy-4 align-items-center">
+        <div class="col-md-4">
+          <div class="footer-brand">
+            <div class="footer-badge"><i class="bi bi-cup-hot"></i></div>
+            <div>
+              <div>Cafeteria</div>
+              <small class="small-note">Seu café, do seu jeito ☕</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 footer-links">
+          <strong>Menu</strong>
+          <a th:href="@{/}" class="d-block">Início</a>
+          <a th:href="@{/menu}" class="d-block">Cardápio</a>
+          <a th:href="@{/cadastro}" class="d-block">Cadastro</a>
+        </div>
+
+        <div class="col-md-4 text-md-end text-center">
+          <div class="mb-2"><strong>Siga-nos</strong></div>
+          <div class="d-flex justify-content-md-end justify-content-center">
+            <a href="#" class="social-icon" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-icon" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-icon" aria-label="X/Twitter"><i class="bi bi-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-4" style="border-color: rgba(255,255,255,0.08)">
+
+      <div class="row">
+        <div class="col-md-6 text-md-start text-center mb-2">
+          <small>© <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2024</span> Cafeteria — Todos os direitos reservados</small>
+        </div>
+        <div class="col-md-6 text-md-end text-center small-note">
+          <small>Feito com <i class="bi bi-heart-fill" style="color: #ff6b6b"></i> • Política de privacidade</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
