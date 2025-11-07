@@ -6,8 +6,8 @@ import java.math.BigDecimal;
 /**
  * Classe que representa a RELAÇÃO N:N entre Pedido e Produto.
  *
- * 👉 Um Pedido pode conter vários Produtos.
- * 👉 Um Produto pode estar em vários Pedidos.
+ *  Um Pedido pode conter vários Produtos.
+ *  Um Produto pode estar em vários Pedidos.
  *
  * Essa relação N:N é implementada de forma explícita por meio
  * desta entidade intermediária: ITEM_PEDIDO.

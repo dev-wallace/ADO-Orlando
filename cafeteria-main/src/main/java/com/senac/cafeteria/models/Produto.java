@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "produto")
 @Data
 public class Produto {
 
@@ -20,20 +21,33 @@ public class Produto {
     private String descricao;
     private BigDecimal preco;
 
+    /**
+     * Armazenamento binário da imagem no banco.
+     * Mantido para não quebrar o sistema de imagens.
+     */
     @Lob
     private byte[] imagem;
 
+    /**
+     * Campo transitório usado para expor a imagem em Base64 na API.
+     * Não é persistido no banco.
+     */
     @Transient
     private String imagemBase64;
 
     /**
-     * Relação N:N explícita com Pedido,
-     * representada pela entidade intermediária ItemPedido.
-     * 
-     * Um Produto pode estar em vários Pedidos
-     * e um Pedido pode conter vários Produtos.
+     * Relação funcional (1:N) com ItemPedido — mantém a lógica do pedido.
      */
     @JsonIgnore
     @OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
     private List<ItemPedido> itensPedido = new ArrayList<>();
+
+    /**
+     * Relação ManyToMany simbólica com Pedido (requisito acadêmico).
+     * Mapeado por "produtosRelacionados" no lado Pedido.
+     * Não utilizada na lógica de cálculo do pedido.
+     */
+    @JsonIgnore
+    @ManyToMany(mappedBy = "produtosRelacionados", fetch = FetchType.LAZY)
+    private List<Pedido> pedidosRelacionados = new ArrayList<>();
 }
