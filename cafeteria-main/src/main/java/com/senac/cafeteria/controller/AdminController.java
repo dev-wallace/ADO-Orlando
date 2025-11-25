@@ -36,12 +36,11 @@ public class AdminController {
     private PedidoService pedidoService;
 
     @InitBinder
-  public void initBinder(WebDataBinder binder) {
-    // já existente: custom editor para BigDecimal
-    binder.registerCustomEditor(BigDecimal.class, new CustomNumberEditor(BigDecimal.class, true));
-    // impede que o DataBinder tente atribuir request param "imagem" direto no produto.imagem
-    binder.setDisallowedFields("imagem");
-}
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(BigDecimal.class, new CustomNumberEditor(BigDecimal.class, true));
+        binder.setDisallowedFields("imagem");
+    }
+
     // ========== PRODUTOS ==========
     @GetMapping("/produtos/novo")
     public String novoProdutoForm(Model model) {
@@ -51,9 +50,9 @@ public class AdminController {
 
     @PostMapping("/produtos/novo")
     public String salvarProduto(@RequestParam String nome,
-                               @RequestParam String descricao,
-                               @RequestParam BigDecimal preco,
-                               @RequestParam("imagem") MultipartFile imagem) throws IOException {
+                                @RequestParam String descricao,
+                                @RequestParam BigDecimal preco,
+                                @RequestParam("imagem") MultipartFile imagem) throws IOException {
 
         Produto produto = new Produto();
         produto.setNome(nome);
@@ -94,8 +93,8 @@ public class AdminController {
 
     @PostMapping("/produtos/editar/{id}")
     public String atualizarProduto(@PathVariable Long id,
-                                  @ModelAttribute Produto produto,
-                                  @RequestParam("imagem") MultipartFile imagem) throws IOException {
+                                   @ModelAttribute Produto produto,
+                                   @RequestParam("imagem") MultipartFile imagem) throws IOException {
         produtoService.atualizarProduto(id, produto, imagem);
         return "redirect:/admin/produtos";
     }
@@ -107,13 +106,13 @@ public class AdminController {
     }
 
     // ========== PEDIDOS ==========
-    @GetMapping("/listar-pedidos")
+    @GetMapping("/pedidos")
     public String listarPedidos(@RequestParam(required = false) StatusPedido status, Model model) {
         System.out.println("=== LISTAR PEDIDOS CHAMADO ===");
         System.out.println("Status filtro: " + status);
-        
+
         List<Pedido> pedidos;
-        
+
         if (status != null) {
             pedidos = pedidoService.listarPedidosPorStatus(status);
             model.addAttribute("filtroAtivo", status);
@@ -122,35 +121,42 @@ public class AdminController {
             pedidos = pedidoService.listarTodosPedidos();
             System.out.println("Todos os pedidos: " + pedidos.size());
         }
-        
+
         // Log para debug
         pedidos.forEach(p -> System.out.println("Pedido " + p.getId() + " - Status: " + p.getStatus()));
-        
+
         model.addAttribute("pedidos", pedidos);
         return "admin/listar-pedidos";
     }
 
-    @GetMapping("/listar-pedidos/{id}")
+    @GetMapping("/pedidos/{id}")
     public String verPedido(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.buscarPorId(id);
         model.addAttribute("pedido", pedido);
         return "admin/ver-pedido";
     }
 
-    @GetMapping("/listar-pedidos/{id}/status")
-    public String atualizarStatus(@PathVariable Long id, 
-                                 @RequestParam StatusPedido status,
-                                 RedirectAttributes redirectAttributes) {
+    @GetMapping("/pedidos/{id}/status")
+    public String atualizarStatus(@PathVariable Long id,
+                                  @RequestParam StatusPedido status,
+                                  RedirectAttributes redirectAttributes) {
         try {
+            System.out.println("=== ATUALIZANDO STATUS DO PEDIDO ===");
+            System.out.println("Pedido ID: " + id);
+            System.out.println("Novo Status: " + status);
+
             pedidoService.atualizarStatus(id, status);
-            redirectAttributes.addFlashAttribute("sucesso", "Status do pedido atualizado com sucesso!");
+
+            redirectAttributes.addFlashAttribute("sucesso", "Status do pedido #" + id + " atualizado para " + status + "!");
         } catch (Exception e) {
+            System.err.println("ERRO ao atualizar status: " + e.getMessage());
+            e.printStackTrace();
             redirectAttributes.addFlashAttribute("erro", "Erro ao atualizar status do pedido: " + e.getMessage());
         }
-        return "redirect:/admin/listar-pedidos";
+        return "redirect:/admin/pedidos";
     }
 
-    @GetMapping("/listar-pedidos/excluir/{id}")
+    @GetMapping("/pedidos/excluir/{id}")
     public String excluirPedido(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             pedidoService.excluirPedido(id);
@@ -158,14 +164,12 @@ public class AdminController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("erro", "Erro ao excluir pedido: " + e.getMessage());
         }
-        return "redirect:/admin/listar-pedidos";
+        return "redirect:/admin/pedidos";
     }
 
     // ========== DASHBOARD ==========
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-       
-        
         long totalProdutos = produtoService.contarProdutos();
         List<Pedido> todosPedidos = pedidoService.listarTodosPedidos();
         long totalPedidos = todosPedidos.size();
@@ -181,7 +185,6 @@ public class AdminController {
         List<Pedido> pedidosRecentes = todosPedidos.stream()
                 .limit(10)
                 .collect(Collectors.toList());
-
 
         model.addAttribute("totalProdutos", totalProdutos);
         model.addAttribute("totalPedidos", totalPedidos);
@@ -202,13 +205,11 @@ public class AdminController {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-   
-
     private BigDecimal calcularFaturamentoMes(List<Pedido> pedidos) {
         LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
         return pedidos.stream()
-                .filter(pedido -> pedido.getDataCriacao() != null && 
-                                 !pedido.getDataCriacao().toLocalDate().isBefore(inicioMes))
+                .filter(pedido -> pedido.getDataCriacao() != null &&
+                        !pedido.getDataCriacao().toLocalDate().isBefore(inicioMes))
                 .map(Pedido::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -216,21 +217,18 @@ public class AdminController {
     private long calcularPedidosHoje(List<Pedido> pedidos) {
         LocalDate hoje = LocalDate.now();
         return pedidos.stream()
-                .filter(pedido -> pedido.getDataCriacao() != null && 
-                                 pedido.getDataCriacao().toLocalDate().equals(hoje))
+                .filter(pedido -> pedido.getDataCriacao() != null &&
+                        pedido.getDataCriacao().toLocalDate().equals(hoje))
                 .count();
     }
 
     private long calcularProdutosVendidosHoje(List<Pedido> pedidos) {
         LocalDate hoje = LocalDate.now();
         return pedidos.stream()
-                .filter(pedido -> pedido.getDataCriacao() != null && 
-                                 pedido.getDataCriacao().toLocalDate().equals(hoje))
+                .filter(pedido -> pedido.getDataCriacao() != null &&
+                        pedido.getDataCriacao().toLocalDate().equals(hoje))
                 .flatMap(pedido -> pedido.getItens().stream())
                 .mapToInt(ItemPedido::getQuantidade)
                 .sum();
     }
-
-   
-
 }
