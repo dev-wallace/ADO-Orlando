@@ -125,6 +125,10 @@ Desenvolvido como projeto acadêmico — Senac.
 <img width="1918" height="896" alt="image" src="https://github.com/user-attachments/assets/434aa3a6-2bc1-471c-8dff-68dc17e1491b" />
 
 
+<img width="1913" height="907" alt="image" src="https://github.com/user-attachments/assets/3e5abf6c-3b09-4c1e-9889-67c88f7f378c" />
+
+
+
 
 
 
