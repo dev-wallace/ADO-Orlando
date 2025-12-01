@@ -1,5 +1,6 @@
 package com.senac.cafeteria.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.List;
@@ -12,24 +13,30 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Data
-public class Usuario implements UserDetails { // ← IMPLEMENTAR UserDetails
-    
+@Table(name = "usuario")
+public class Usuario implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String nome;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @JsonIgnore
     private String senha;
+
     private String endereco;
-    
+
     @Enumerated(EnumType.STRING)
     private Role role;
-    
+
     @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos;
 
-    // ← MÉTODOS OBRIGATÓRIOS DO UserDetails
+    // UserDetails methods
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -38,31 +45,23 @@ public class Usuario implements UserDetails { // ← IMPLEMENTAR UserDetails
 
     @Override
     public String getPassword() {
-        return senha; // ← Retorna a senha do usuário
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return email; // ← Retorna o email como username
+        return email;
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true; // ← Conta nunca expira
-    }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true; // ← Conta nunca é bloqueada
-    }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // ← Credenciais nunca expiram
-    }
+    public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() {
-        return true; // ← Usuário sempre está ativo
-    }
+    public boolean isEnabled() { return true; }
 }
