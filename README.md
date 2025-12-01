@@ -122,6 +122,7 @@ Content-Type: application/json
 Este projeto é destinado exclusivamente a fins educacionais.  
 Desenvolvido como projeto acadêmico — Senac.
 
+<img width="1918" height="896" alt="image" src="https://github.com/user-attachments/assets/434aa3a6-2bc1-471c-8dff-68dc17e1491b" />
 
 
 
