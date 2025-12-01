@@ -70,11 +70,7 @@ public class SecurityConfig {
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-<<<<<<< HEAD
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/images_homapage/**", "/webjars/**", "/favicon.ico").permitAll()
-=======
                 .requestMatchers("/css/*", "/js/", "/images/", "/images_homapage/", "/webjars/*", "/favicon.ico").permitAll()
->>>>>>> 3c1f5f0f962c0975e55a991c26f36f654955c71a
                 .requestMatchers(SWAGGER_MATCHERS).permitAll()     // libera swagger UI
                 .requestMatchers("/", "/menu", "/cadastro", "/login", "/about").permitAll()
                 .requestMatchers("/carrinho/**", "/perfil").hasAuthority("ROLE_CLIENTE")
