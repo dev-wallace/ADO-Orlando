@@ -24,7 +24,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3c1f5f0f962c0975e55a991c26f36f654955c71a
 @RestController
 @RequestMapping("/api/auth")
 public class ApiAuthController {
