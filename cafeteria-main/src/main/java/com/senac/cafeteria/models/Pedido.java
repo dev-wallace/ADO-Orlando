@@ -31,8 +31,7 @@ public class Pedido {
     private List<ItemPedido> itens = new ArrayList<>();
 
     /**
-     * Relação ManyToMany simbólica (para requisito acadêmico)
-     * Não interfere na lógica funcional de ItemPedido.
+     * Relação ManyToMany.
      */
     @ManyToMany
     @JoinTable(
