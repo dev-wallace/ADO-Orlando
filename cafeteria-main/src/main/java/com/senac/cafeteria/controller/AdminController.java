@@ -7,7 +7,6 @@ import com.senac.cafeteria.models.enums.StatusPedido;
 import com.senac.cafeteria.services.PedidoService;
 import com.senac.cafeteria.services.ProdutoService;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.stereotype.Controller;
@@ -25,16 +24,27 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ * Controller responsável pelas páginas e ações administrativas (produtos, pedidos, dashboard).
+ * Contém handlers para CRUD de produtos, listagem/alteração de pedidos e geração de dados do dashboard.
+ */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
+    // Serviço para operações relacionadas a produtos (salvar, listar, atualizar, excluir)
     @Autowired
     private ProdutoService produtoService;
 
+    // Serviço para operações relacionadas a pedidos (listar, atualizar status, excluir)
     @Autowired
     private PedidoService pedidoService;
 
+    /*
+     * Configurações do binder para conversão de tipos vindos do formulário.
+     * Aqui é registrado um editor para BigDecimal e é proibida a binding direta do campo 'imagem'
+     * para evitar sobrescrever o array de bytes por binding automático.
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(BigDecimal.class, new CustomNumberEditor(BigDecimal.class, true));
@@ -42,12 +52,15 @@ public class AdminController {
     }
 
     // ========== PRODUTOS ==========
+
+    // Formulário para criar um novo produto
     @GetMapping("/produtos/novo")
     public String novoProdutoForm(Model model) {
-        model.addAttribute("produto", new Produto());
+        model.addAttribute("produto", new Produto()); // adiciona objeto vazio ao template
         return "admin/novo-produto";
     }
 
+    // Salva um novo produto recebido do formulário (inclui upload de imagem)
     @PostMapping("/produtos/novo")
     public String salvarProduto(@RequestParam String nome,
                                 @RequestParam String descricao,
@@ -59,10 +72,12 @@ public class AdminController {
         produto.setDescricao(descricao);
         produto.setPreco(preco);
 
+        // Delega ao serviço a persistência e tratamento da imagem
         produtoService.salvarProduto(produto, imagem);
         return "redirect:/admin/produtos";
     }
 
+    // Lista todos os produtos mostrando imagem como Base64 para exibição no template
     @GetMapping("/produtos")
     public String listarProdutos(Model model) {
         List<Produto> produtos = produtoService.listarTodos();
@@ -70,7 +85,7 @@ public class AdminController {
         for (Produto produto : produtos) {
             if (produto.getImagem() != null) {
                 String base64Image = Base64.getEncoder().encodeToString(produto.getImagem());
-                produto.setImagemBase64(base64Image);
+                produto.setImagemBase64(base64Image); // seta campo transitório para view
             }
         }
 
@@ -78,6 +93,7 @@ public class AdminController {
         return "admin/listar-produtos";
     }
 
+    // Formulário para editar um produto existente (carrega produto por id)
     @GetMapping("/produtos/editar/{id}")
     public String editarProdutoForm(@PathVariable Long id, Model model) {
         Produto produto = produtoService.buscarPorId(id);
@@ -91,6 +107,7 @@ public class AdminController {
         return "admin/editar-produto";
     }
 
+    // Atualiza um produto a partir do formulário (pode incluir nova imagem)
     @PostMapping("/produtos/editar/{id}")
     public String atualizarProduto(@PathVariable Long id,
                                    @ModelAttribute Produto produto,
@@ -99,6 +116,7 @@ public class AdminController {
         return "redirect:/admin/produtos";
     }
 
+    // Exclui um produto por id
     @GetMapping("/produtos/excluir/{id}")
     public String excluirProduto(@PathVariable Long id) {
         produtoService.excluirProduto(id);
@@ -106,6 +124,11 @@ public class AdminController {
     }
 
     // ========== PEDIDOS ==========
+
+    /*
+     * Lista pedidos filtrando por status opcional.
+     * Adiciona logs simples para auxiliar debug local.
+     */
     @GetMapping("/pedidos")
     public String listarPedidos(@RequestParam(required = false) StatusPedido status, Model model) {
         System.out.println("=== LISTAR PEDIDOS CHAMADO ===");
@@ -129,6 +152,7 @@ public class AdminController {
         return "admin/listar-pedidos";
     }
 
+    // Visualiza detalhes de um pedido específico
     @GetMapping("/pedidos/{id}")
     public String verPedido(@PathVariable Long id, Model model) {
         Pedido pedido = pedidoService.buscarPorId(id);
@@ -136,6 +160,7 @@ public class AdminController {
         return "admin/ver-pedido";
     }
 
+    // Atualiza o status de um pedido e adiciona mensagem flash de sucesso/erro
     @GetMapping("/pedidos/{id}/status")
     public String atualizarStatus(@PathVariable Long id,
                                   @RequestParam StatusPedido status,
@@ -156,6 +181,7 @@ public class AdminController {
         return "redirect:/admin/pedidos";
     }
 
+    // Exclui um pedido e informa resultado via flash attributes
     @GetMapping("/pedidos/excluir/{id}")
     public String excluirPedido(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -168,6 +194,8 @@ public class AdminController {
     }
 
     // ========== DASHBOARD ==========
+
+    // Página do dashboard que agrega métricas (total produtos, pedidos, faturamento, etc.)
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         long totalProdutos = produtoService.contarProdutos();
@@ -199,12 +227,15 @@ public class AdminController {
     }
 
     // ========== MÉTODOS AUXILIARES ==========
+
+    // Soma total de todos os pedidos
     private BigDecimal calcularFaturamentoTotal(List<Pedido> pedidos) {
         return pedidos.stream()
                 .map(Pedido::getTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    // Soma do faturamento do mês corrente
     private BigDecimal calcularFaturamentoMes(List<Pedido> pedidos) {
         LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
         return pedidos.stream()
@@ -214,6 +245,7 @@ public class AdminController {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    // Quantidade de pedidos do dia atual
     private long calcularPedidosHoje(List<Pedido> pedidos) {
         LocalDate hoje = LocalDate.now();
         return pedidos.stream()
@@ -222,6 +254,7 @@ public class AdminController {
                 .count();
     }
 
+    // Soma de itens vendidos hoje (quantidades) a partir dos pedidos do dia
     private long calcularProdutosVendidosHoje(List<Pedido> pedidos) {
         LocalDate hoje = LocalDate.now();
         return pedidos.stream()
