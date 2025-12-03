@@ -4,6 +4,16 @@ Projeto acadêmico desenvolvido com **Spring Boot (Java 21)**, oferecendo API RE
 
 ---
 
+## Integrantes
+
+- **Nicolas Oliveira Nascimento** – RA: 1142020874  
+- **Paulo Eduardo Messias Grispan** – RA: 1142944524  
+- **Allan Ribeiro de Souza** – RA: 1141581353  
+- **Wallace Araújo da Silva** – RA: 1142955905  
+- **Arthur Vitalino Santos** – RA: 114259183  
+- **Micael Cadete da Silva Cosme** – RA: 1142019443
+
+
 ## Visão Geral
 
 Aplicação modelo para uma cafeteria com os seguintes recursos:
